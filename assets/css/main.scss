@@ -1,0 +1,63 @@
+---
+# for jekyll
+---
+
+@import 'colors';
+@import 'typography';
+
+body {
+    background: $clr-white;
+    color: $clr-black;
+    font-family: $ff-s;
+    font-size: 1.2rem;
+    display: grid;
+    grid-template-columns: 
+    1fr [container-start] 
+    repeat(6, minmax(50px,150px)) 
+    [container-end] 1fr;
+    margin: 0;
+    grid-gap: 1em 2em;
+}
+div.logo-area {
+    background: $clr-logobg;
+    padding: 1rem 1rem 0.6rem;
+    text-align: left;
+}
+div.title-area {
+    background: $clr-blue;
+    color: $clr-white;
+    grid-column: 1 / 9;
+    text-align: center;
+    padding: 0 0 3rem 0;
+}
+.title {
+    font-family: $ff-ss;
+    text-transform: uppercase;
+    font-size: 6rem;
+    margin: 4rem 0 1rem;
+    color: $clr-white;
+}
+
+p, ol, ul, h2 {
+    grid-column: 3 / 7;
+}
+p {
+    margin: 0;
+}
+div.sub-head {
+    
+}
+h2 {
+    color: $clr-black;
+    font-family: $ff-ss;
+    text-transform: uppercase;
+    font-size: 2rem;
+    margin: 1.5rem 0 0.5rem;
+}
+footer {
+    grid-column: 1 / 9;
+    background-color: $clr-pink;
+    color: $clr-white;
+    text-align: center;
+    padding: 2em 0;
+}

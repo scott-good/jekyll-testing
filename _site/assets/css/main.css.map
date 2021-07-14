@@ -1,0 +1,16 @@
+{
+	"version": 3,
+	"file": "main.css",
+	"sources": [
+		"main.scss",
+		"_sass/_colors.scss",
+		"_sass/_typography.scss"
+	],
+	"sourcesContent": [
+		"@import 'colors';\n@import 'typography';\n\nbody {\n    background: $clr-white;\n    color: $clr-black;\n    font-family: $ff-s;\n    font-size: 1.2rem;\n    display: grid;\n    grid-template-columns: \n    1fr [container-start] \n    repeat(6, minmax(50px,150px)) \n    [container-end] 1fr;\n    margin: 0;\n    grid-gap: 1em 2em;\n}\ndiv.logo-area {\n    background: $clr-logobg;\n    padding: 1rem 1rem 0.6rem;\n    text-align: left;\n}\ndiv.title-area {\n    background: $clr-blue;\n    color: $clr-white;\n    grid-column: 1 / 9;\n    text-align: center;\n    padding: 0 0 3rem 0;\n}\n.title {\n    font-family: $ff-ss;\n    text-transform: uppercase;\n    font-size: 6rem;\n    margin: 4rem 0 1rem;\n    color: $clr-white;\n}\n\np, ol, ul, h2 {\n    grid-column: 3 / 7;\n}\np {\n    margin: 0;\n}\ndiv.sub-head {\n    \n}\nh2 {\n    color: $clr-black;\n    font-family: $ff-ss;\n    text-transform: uppercase;\n    font-size: 2rem;\n    margin: 1.5rem 0 0.5rem;\n}\nfooter {\n    grid-column: 1 / 9;\n    background-color: $clr-pink;\n    color: $clr-white;\n    text-align: center;\n    padding: 2em 0;\n}",
+		"$clr-white: #fff;\n$clr-blue: #1985a1;\n$clr-pink: #e63462;\n$clr-black: #333;\n$clr-logobg: #3a3a3a;",
+		"@import url('https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Pathway+Gothic+One&display=swap');\n\n$ff-ss: \"Pathway Gothic One\", sans-serif;\n$ff-s: \"Cardo\", serif;"
+	],
+	"names": [],
+	"mappings": "AEAA,OAAO,CAAC,wHAAI;AFGZ,AAAA,IAAI,CAAC,EACD,UAAU,ECJF,IAAI,EDKZ,KAAK,ECFG,IAAI,EDGZ,WAAW,EEHR,OAAO,EAAE,KAAK,EFIjB,SAAS,EAAE,MAAM,EACjB,OAAO,EAAE,IAAI,EACb,qBAAqB,EACrB,GAAG,EAAE,eAAe,EACpB,8BAA6B,EAC5B,aAAa,EAAE,GAAG,EACnB,MAAM,EAAE,CAAC,EACT,QAAQ,EAAE,OAAO,GACpB;;AACD,AAAA,GAAG,AAAA,UAAU,CAAC,EACV,UAAU,ECbD,OAAO,EDchB,OAAO,EAAE,gBAAgB,EACzB,UAAU,EAAE,IAAI,GACnB;;AACD,AAAA,GAAG,AAAA,WAAW,CAAC,EACX,UAAU,ECrBH,OAAO,EDsBd,KAAK,ECvBG,IAAI,EDwBZ,WAAW,EAAE,KAAK,EAClB,UAAU,EAAE,MAAM,EAClB,OAAO,EAAE,UAAU,GACtB;;AACD,AAAA,MAAM,CAAC,EACH,WAAW,EE3BP,oBAAoB,EAAE,UAAU,EF4BpC,cAAc,EAAE,SAAS,EACzB,SAAS,EAAE,IAAI,EACf,MAAM,EAAE,WAAW,EACnB,KAAK,ECjCG,IAAI,GDkCf;;AAED,AAAA,CAAC,EAAE,EAAE,EAAE,EAAE,EAAE,EAAE,CAAC,EACV,WAAW,EAAE,KAAK,GACrB;;AACD,AAAA,CAAC,CAAC,EACE,MAAM,EAAE,CAAC,GACZ;;AAID,AAAA,EAAE,CAAC,EACC,KAAK,EC3CG,IAAI,ED4CZ,WAAW,EE7CP,oBAAoB,EAAE,UAAU,EF8CpC,cAAc,EAAE,SAAS,EACzB,SAAS,EAAE,IAAI,EACf,MAAM,EAAE,eAAe,GAC1B;;AACD,AAAA,MAAM,CAAC,EACH,WAAW,EAAE,KAAK,EAClB,gBAAgB,ECpDT,OAAO,EDqDd,KAAK,ECvDG,IAAI,EDwDZ,UAAU,EAAE,MAAM,EAClB,OAAO,EAAE,KAAK,GACjB"
+}
