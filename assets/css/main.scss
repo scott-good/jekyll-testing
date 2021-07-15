@@ -1,5 +1,5 @@
 ---
-# for jekyll
+#forjekyll
 ---
 
 @import 'colors';
@@ -10,6 +10,9 @@ body {
     color: $clr-black;
     font-family: $ff-s;
     font-size: 1.2rem;
+    margin: 0;
+}
+div#main-body {
     display: grid;
     grid-template-columns: 
     1fr [container-start] 
@@ -37,22 +40,28 @@ div.title-area {
     margin: 4rem 0 1rem;
     color: $clr-white;
 }
-
-p, ol, ul, h2 {
-    grid-column: 3 / 7;
+p, ol, ul, h1, h2, h3, h4, h5, pre, code, table {
+    grid-column: 2 / 8;
 }
 p {
     margin: 0;
 }
-div.sub-head {
-    
-}
-h2 {
+h1, h2, h3, h4, h5, h6 {
     color: $clr-black;
     font-family: $ff-ss;
     text-transform: uppercase;
+    margin: 0; 
+    padding: 0;
+}
+h2 {
     font-size: 2rem;
     margin: 1.5rem 0 0.5rem;
+}
+p.sub-title {
+    grid-column: 2 / 8;
+}
+img.inline-image {
+    width: 100%;
 }
 footer {
     grid-column: 1 / 9;
@@ -61,3 +70,78 @@ footer {
     text-align: center;
     padding: 2em 0;
 }
+ul.myposts {
+    list-style: none;
+}
+ul.myposts li {
+    margin-bottom: 1rem;
+}
+.post__title {
+    display: block;
+    font-family: $ff-ss;
+    font-size: 2rem;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+.post__date {
+    display: block;
+    font-style: italic;
+}
+/*
+ul:first-of-type {
+    grid-column: 1 / 2;
+    position: absolute;
+    list-style: none;
+    margin: 2vw ;
+    padding: 0;
+    font-family: $ff-ss;
+    font-size: 1rem;
+    width: 18vw;
+    li {
+        padding: 0.5rem;
+        background: #ccc;
+        position: relative;
+        border-bottom: 1pt solid #eee;
+    }
+    li a {
+        text-decoration:none;
+        color: #666;
+        cursor: pointer;
+        height: 1rem;
+        padding-left: 0.5rem;
+        width: 100%;
+    }
+    li:hover {
+        background: #666;
+    }
+    li:hover a {
+        color: $clr-white;
+    }
+    li ul {
+        display: none;
+    }
+    li:hover ul, 
+    li ul li:hover ul, 
+    li li ul li:hover ul, 
+    li li li ul li:hover ul {
+        display: block;
+        top: calc(-2rem + 6px);
+        left: 13vw;
+    }
+    li:hover ul li a, 
+    li:hover li:hover ul li a, 
+    li:hover li:hover li:hover ul li a, 
+    li:hover li:hover li:hover li:hover ul li a {
+        color: #666;
+    }
+    li:hover ul li:hover a, 
+    li li:hover ul li:hover a, 
+    li li:hover li:hover ul li:hover a, 
+    li li:hover li:hover li:hover ul li:hover a {
+        color: $clr-white;
+    }
+    li:hover ul ul {
+        display:none;
+    }
+}
+*/

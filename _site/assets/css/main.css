@@ -1,5 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Pathway+Gothic+One&display=swap");
-body { background: #fff; color: #333; font-family: "Cardo", serif; font-size: 1.2rem; display: grid; grid-template-columns: 1fr [container-start] repeat(6, minmax(50px, 150px)) [container-end] 1fr; margin: 0; grid-gap: 1em 2em; }
+@import url("https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&display=swap&family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,600;0,700;1,300;1,500;1,600&display=swap");
+body { background: #fff; color: #333; font-family: "IBM Plex Serif", serif; font-size: 1.2rem; margin: 0; }
+
+div#main-body { display: grid; grid-template-columns: 1fr [container-start] repeat(6, minmax(50px, 150px)) [container-end] 1fr; margin: 0; grid-gap: 1em 2em; }
 
 div.logo-area { background: #3a3a3a; padding: 1rem 1rem 0.6rem; text-align: left; }
 
@@ -7,12 +9,28 @@ div.title-area { background: #1985a1; color: #fff; grid-column: 1 / 9; text-alig
 
 .title { font-family: "Pathway Gothic One", sans-serif; text-transform: uppercase; font-size: 6rem; margin: 4rem 0 1rem; color: #fff; }
 
-p, ol, ul, h2 { grid-column: 3 / 7; }
+p, ol, ul, h1, h2, h3, h4, h5, pre, code, table { grid-column: 2 / 8; }
 
 p { margin: 0; }
 
-h2 { color: #333; font-family: "Pathway Gothic One", sans-serif; text-transform: uppercase; font-size: 2rem; margin: 1.5rem 0 0.5rem; }
+h1, h2, h3, h4, h5, h6 { color: #333; font-family: "Pathway Gothic One", sans-serif; text-transform: uppercase; margin: 0; padding: 0; }
+
+h2 { font-size: 2rem; margin: 1.5rem 0 0.5rem; }
+
+p.sub-title { grid-column: 2 / 8; }
+
+img.inline-image { width: 100%; }
 
 footer { grid-column: 1 / 9; background-color: #e63462; color: #fff; text-align: center; padding: 2em 0; }
+
+ul.myposts { list-style: none; }
+
+ul.myposts li { margin-bottom: 1rem; }
+
+.post__title { display: block; font-family: "Pathway Gothic One", sans-serif; font-size: 2rem; text-transform: uppercase; text-decoration: none; }
+
+.post__date { display: block; font-style: italic; }
+
+/* ul:first-of-type { grid-column: 1 / 2; position: absolute; list-style: none; margin: 2vw ; padding: 0; font-family: $ff-ss; font-size: 1rem; width: 18vw; li { padding: 0.5rem; background: #ccc; position: relative; border-bottom: 1pt solid #eee; } li a { text-decoration:none; color: #666; cursor: pointer; height: 1rem; padding-left: 0.5rem; width: 100%; } li:hover { background: #666; } li:hover a { color: $clr-white; } li ul { display: none; } li:hover ul,  li ul li:hover ul,  li li ul li:hover ul,  li li li ul li:hover ul { display: block; top: calc(-2rem + 6px); left: 13vw; } li:hover ul li a,  li:hover li:hover ul li a,  li:hover li:hover li:hover ul li a,  li:hover li:hover li:hover li:hover ul li a { color: #666; } li:hover ul li:hover a,  li li:hover ul li:hover a,  li li:hover li:hover ul li:hover a,  li li:hover li:hover li:hover ul li:hover a { color: $clr-white; } li:hover ul ul { display:none; } } */
 
 /*# sourceMappingURL=main.css.map */

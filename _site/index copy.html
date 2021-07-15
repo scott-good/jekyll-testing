@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good Thinking</title>
+    <link rel="stylesheet" href=/assets/css/main.css>
+</head>
+<body>
+    <div class="title-area">
+        <div class="logo-area">
+            <img src=/assets/images/hcl-sofy-logo.svg class="logo">
+        </div>
+        <h1 class="title">Good Thinking</h1>
+        <p class="sub-title">An example of a blog that's half a bubble (or so) off-level.</p>
+    </div>
+    <div id="main-body">
+        <h2 id="how-to-get-cloud-native-ready-on-sofy">How to Get Cloud Native Ready on SoFy</h2>
+<ul>
+  <li><a href="#sofy-catalog-item-types">SoFy Catalog Item Types</a></li>
+  <li><a href="#sofy-catalog-content-metadata">SoFy Catalog Metadata</a>
+    <ul>
+      <li><a href="#generic-metadata">Generic Metadata</a></li>
+      <li><a href="#demo-packs-metadata">Demo Packs</a></li>
+      <li><a href="#demo-docs-and-proxy-metadata">Demo Docs &amp; Proxies</a></li>
+      <li><a href="#hybrid-mode-metadata">Hybrid Mode</a></li>
+      <li><a href="#incompatibilities-metadata">Incompatibilities</a></li>
+    </ul>
+  </li>
+  <li><a href="#helm-chart-requirements">Helm Chart Requirements</a>
+    <ul>
+      <li><a href="#chart-acceptance">Chart Acceptance</a>
+        <ul>
+          <li><a href="#1-helm-3-chart">1. Helm 3 Chart</a></li>
+          <li><a href="#2-helm-install">2. Helm Install</a></li>
+          <li><a href="#3-self-contained">3. Self Contained</a></li>
+          <li><a href="#4-alias-or-name-override-for-dependency-charts">4. Alias or Name Override for Dependency Charts</a></li>
+          <li><a href="#5-self-healing">5. Self Healing</a></li>
+          <li><a href="#6-upgrade">6. Upgrade</a></li>
+          <li><a href="#7-scaling">7. Scaling</a></li>
+        </ul>
+      </li>
+      <li><a href="#sofy-integration">SoFy Integration</a>
+        <ul>
+          <li><a href="#1-flexnet-license">1. FlexNet License</a>
+            <ul>
+              <li><a href="#requirements">Requirements</a></li>
+              <li><a href="#how-to-enable">How to Enable</a></li>
+            </ul>
+          </li>
+          <li><a href="#2-sofy-solution-routing">2. SoFy Solution Routing</a>
+            <ul>
+              <li><a href="#default-routing">Default Routing</a></li>
+              <li><a href="#custom-routing-and-exposing-tcp-ports">Custom Routing and Exposing TCP Ports</a></li>
+            </ul>
+          </li>
+          <li><a href="#3-global-configs">3. Global Configs</a>
+            <ul>
+              <li><a href="#chartyaml-file">Chart.yaml file</a></li>
+              <li><a href="#valuesyaml-file">values.yaml file</a></li>
+              <li><a href="#useful-global-values">Useful global values</a></li>
+            </ul>
+          </li>
+          <li><a href="#4-solution-console-ui-integration">4. Solution Console UI Integration</a>
+            <ul>
+              <li><a href="#providing-links-to-your-end-points">Providing Links to Your End Points</a>
+                <ul>
+                  <li><a href="#links-schema">Links Schema</a></li>
+                  <li><a href="#links-schema-deprecating-soon">Links Schema (Deprecating soon)</a></li>
+                </ul>
+              </li>
+              <li><a href="#disable-default-public-routes-and-default-authentication">Disable default public routes and default authentication</a></li>
+              <li><a href="#expose-additional-application-log-files">Expose additional application log files</a></li>
+              <li><a href="#specify-required-flexnet-feature-names">Specify required FlexNet feature names</a></li>
+            </ul>
+          </li>
+          <li><a href="#5-pods-requirements">5. Pods Requirements</a>
+            <ul>
+              <li><a href="#resource-requests-and-limits">Resource Requests and Limits</a></li>
+              <li><a href="#health-checks">Health Checks</a></li>
+              <li><a href="#labels-and-selectors">Labels and Selectors</a></li>
+            </ul>
+          </li>
+          <li><a href="#6-getting-sofy-domain-in-a-container">6. Getting Sofy Domain in a Container</a></li>
+          <li><a href="#7-kubernetes-resource-naming-best-practice">7. Kubernetes Resource Naming Best Practice</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#windows-images">Windows Images</a>
+    <ul>
+      <li><a href="#use-node-selectors-and-tolerations">Use Node Selectors and Tolerations</a></li>
+      <li><a href="#windows-pods-examples">Windows Pods Examples</a></li>
+    </ul>
+  </li>
+  <li><a href="#tips-and-tricks">Tips and Tricks</a></li>
+  <li><a href="#also-reference">Also reference</a></li>
+</ul>
+
+<h2 id="recent-blog-posts">Recent Blog Posts</h2>
+
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation <a href="https://google.com">ullamcorper suscipit lobortis</a> nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.</p>
+
+<p><img src="/assets/images/landscape-architecture-fun-facts-outside-productions-blog-980x551.jpg" class="inline-image" /></p>
+
+<p>Li Europan lingues es membres del sam familie. Lor separat existentie es un myth. Por scientie, musica, sport etc, li tot Europa usa li sam vocabularium. Li lingues differe solmen in li grammatica, li pronunciation e li plu commun vocabules. Omnicos directe al desirabilita; de un nov lingua franca: on refusa continuar payar custosi traductores. It solmen va esser necessi far uniform grammatica, pronunciation e plu sommun paroles.</p>
+
+<ul class="myposts">
+    
+    <li>
+        <a class='post__title' href="/2021/07/14/my-fourth-post.html">My fourth blog post</a>
+        <span class="post__desc">
+            A description of the post, or an introduction or that type of content would go here, and probably look okay as long as it's not too short. And this is definitely not too short.
+        </span>
+    </li>
+    
+    <li>
+        <a class='post__title' href="/2021/07/13/my-third-post.html">My third blog post</a>
+        <span class="post__desc">
+            A description of the post, or an introduction or that type of content would go here, and probably look okay as long as it's not too short. And this is definitely not too short.
+        </span>
+    </li>
+    
+    <li>
+        <a class='post__title' href="/2021/07/12/sofy-catalog-item-types.html">SoFy Catalog Item Types</a>
+        <span class="post__desc">
+            Understanding the various types of content available in SoFy.
+        </span>
+    </li>
+    
+    <li>
+        <a class='post__title' href="/2021/07/11/sofy-metadata.html">SoFy Metadata</a>
+        <span class="post__desc">
+            Key to getting SoFy working properly is making the necessary adjustments to your Helm chart's metadata.
+        </span>
+    </li>
+    
+</ul>
+
+    </div>
+
+    <footer>
+        <p>This is whatever is going to end up as the footer.</p>
+    </footer>
+</body>
+</html>

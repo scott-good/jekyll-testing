@@ -1,0 +1,15 @@
+---
+layout: default
+---
+
+{{ content }}
+<ul class="myposts">
+    {% for post in site.posts %}
+    <li>
+        <a class='post__title' href="{{ post.url }}">{{ post.title }}</a>
+        <span class="post__desc">
+            {{ post.description }}
+        </span>
+    </li>
+    {% endfor %}
+</ul>
