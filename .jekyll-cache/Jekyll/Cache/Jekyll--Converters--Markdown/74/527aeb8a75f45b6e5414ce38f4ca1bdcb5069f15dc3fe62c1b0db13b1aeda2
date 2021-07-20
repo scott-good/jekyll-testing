@@ -1,0 +1,80 @@
+I"�<h4 id="7-kubernetes-resource-naming-best-practice">7. Kubernetes Resource Naming Best Practice</h4>
+
+<p>It is recommended that Kubernetes resources like Pods, PVC’s, and Services use the product name and release name as part of their naming scheme. Example: <code>{{ .Release.Name }}-onedb</code></p>
+
+<p>This is done so that these resources don’t conflict with other products/services inside the same SoFy solution. This also improves user experience and debugging because of the improved visibility on which resource belongs to which services.</p>
+
+<h2 id="windows-images">Windows Images</h2>
+
+<p>SoFy sandboxes run on GKE clusters.  GKE windows server nodes support running <strong>Windows Server version 2019 LTSC (Long Term Support Channel) images</strong>. SoFy sandboxes do not support running any Windows images from SAC (Semi-Annual Channel) because <a href="https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster-windows">GKE’s frequent and arbitrary stop of cluster nodes creation when a SAC version ends its support lifecycle.</a></p>
+
+<p>Both Windows Server Core and Nano Server from LTSC can be used as a base image for your containers. See <a href="https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster-windows#version_compatibility">Windows Image version compatibility</a> and <a href="https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-cluster-windows#version_mapping">Version mapping by GKE</a>.</p>
+
+<p>The following windows base images have been tested on SoFy sandbox cluster:</p>
+
+<ul>
+  <li><code>FROM mcr.microsoft.com/windows/servercore:ltsc2019</code></li>
+  <li><code>FROM mcr.microsoft.com/windows:10.0.17763.1817</code></li>
+</ul>
+
+<p>SoFy’s production sandbox will start to support LTSC Windows Server version 2019 before the end of May 2021. Please let SoFy team know if your product have different needs.</p>
+
+<h3 id="use-node-selectors-and-tolerations">Use Node Selectors and Tolerations</h3>
+
+<p>While using Windows Image, it is important that the pod gets sheduled in appropriate Windows node pool. To ensure that the Windows pods get sheduled in the correct node pool you need to add following node selectors and node tolerations.</p>
+
+<p>In <strong>values.yaml</strong>:</p>
+
+<pre><code class="language-yaml">
+nodeSelector:
+  beta.kubernetes.io/os: windows
+  node.kubernetes.io/windows-build: "10.0.17763"
+tolerations: 
+- key: "node.kubernetes.io/os"
+  operator: "Equal"
+  value: "windows"
+  effect: "NoSchedule"
+
+</code></pre>
+
+<p>In <strong>your pod specification</strong> of your deployment.yaml or statefulset.yaml:</p>
+<pre><code class="language-yaml">
+{{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.affinity }}
+{{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+
+</code></pre>
+
+<p>In the above node selectors, the first selector is the label for all the nodes with Windows OS and the second selector is the label for all the nodes with Windows LTSC server. The <code>tolerations</code> allows your windows pods to be schedulable on windows nodes with the “windows” taint, but other pods w/o this toleration will not be schedulable on such nodes.</p>
+
+<h3 id="windows-pods-examples">Windows Pods Examples</h3>
+
+<ol>
+  <li>
+    <p><a href="https://github01.hclpnp.com/kubernetes/sofy-catalog-content/tree/master/GA/snoop-windows-ltsc2019">snoop windows</a></p>
+  </li>
+  <li>
+    <p><a href="https://github01.hclpnp.com/kubernetes/sofy-catalog-content/tree/master/GA/unica-discover">Unica Discover</a> uses windows image.</p>
+  </li>
+</ol>
+
+<h2 id="tips-and-tricks">Tips and Tricks</h2>
+
+<ul>
+  <li>If you are starting from scratch, use <code>helm create my-chart-name</code> to get a working sample of a helm chart with best practices. This is a great starting point and satisfies all common K8s and helm charts requirements above.</li>
+</ul>
+
+<h2 id="also-reference">Also reference</h2>
+
+<ul>
+  <li><a href="https://hclo365.sharepoint.com/:p:/r/sites/SoFyProductContentCollaboration/Shared%20Documents/General/Darwin%20SoFy%20Onboarding/SoFy%20Onboarding%20Checklists/HCL-Products-SoFy-readiness-checklist.pptx?d=wa8a4906719354246bd335be2d217ad1d&amp;csf=1&amp;web=1&amp;e=pdL0g8">Products Checklist for SoFy</a></li>
+  <li><a href="https://hclo365.sharepoint.com/:p:/r/sites/SoFyProductContentCollaboration/Shared%20Documents/General/Darwin%20SoFy%20Onboarding/SoFy%20Onboarding%20Checklists/HCL-Demos-SoFy-readiness-checklist.pptx?d=w5610fe7e837b433ebadc905daeba6719&amp;csf=1&amp;web=1&amp;e=sUxapu">Demo Packs Checklist for SoFy</a></li>
+  <li>Live <a href="https://github01.hclpnp.com/pages/kubernetes/knowledge-base/">Cloud Native Knowledge Base</a></li>
+</ul>
+:ET

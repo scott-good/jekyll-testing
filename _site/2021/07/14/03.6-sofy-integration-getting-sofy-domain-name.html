@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoFy Integration / Getting SoFy Domain</title>
+    <link rel="stylesheet" href=/assets/css/main.css>
+</head>
+<body>
+    <div class="title-area">
+        <div class="inner-title-area">
+            <div class="logo-area">
+                <img src=/assets/images/hcl-sofy-logo.svg class="logo">
+            </div>
+            <h1 class="title">SoFy Integration / Getting SoFy Domain</h1>
+            <p class="sub-title">A description of the post.</p>
+        </div>
+    </div>
+    <div id="main-body">
+        <ul class="navigation">
+    
+    <li>
+        <a class='level_1' href="../../../index.html" alt="Getting Cloud Native-Ready with SoFy">Home</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/01-sofy-catalog-item-types.html" alt="SoFy Catalog Item Types">Item Types</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/02-sofy-metadata.html" alt="SoFy Metadata">Metadata</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/13/helm-chart-reqts.html" alt="Helm Chart Requirements">Helm Charts</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/03.0-sofy-integration.html" alt="SoFy Integration">Integration</a>
+        
+            <span class='downArrow'>&#8964</span>
+            <ul>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.1-sofy-integration-flexnet.html" alt="FlexNet Licensing Integration">FlexNet Licensing</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.2-sofy-integration-soltn-routing.html" alt="SoFy Solution Routing">Solution Routing</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.3-sofy-integration-global-configs.html" alt="Global Configuration Settings">Global Configs</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.4-sofy-integration-solutn-console-ui.html" alt="SoFy Solution Console UI">Console UI</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.5-sofy-integration-pods-requirements.html" alt="Pods Requirements">Pods Reqts</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.6-sofy-integration-getting-sofy-domain-name.html" alt="Getting the SoFy Domain Name">SoFy Domain</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.7-sofy-integration-k8s-naming.html" alt="Kubernetes Naming Conventions">K8s Naming</a>
+                </li>
+                
+            </ul>
+        
+    </li>
+    
+</ul>
+<h2 id="getting-sofy-domain-in-a-container">Getting Sofy Domain in a Container</h2>
+
+<p>There are scenarios where a container (inside a pod) needs to know the name of the Sofy sub-domain. For example, when constructing the host name for a particular Kubernetes service. This can be achieved in either of the following ways:</p>
+
+<ul>
+  <li>Using the <code>global.domain</code> variable (present in <code>values.yaml</code>) that’s set for each solution deployed in a SoFy sandbox, or a custom domain set at solution install time, outside of the sandbox.</li>
+</ul>
+
+<p>It can be used as follows:</p>
+
+<pre><code class="language-yaml"> 
+      containers:
+        - name: example
+          image: "busybox:latest"
+          env:
+            - name: MY_SUB_DOMAIN
+              value: "{{ .Values.global.domain }}"
+ 
+</code></pre>
+
+<ul>
+  <li>
+    <p>Using ConfigMap <code>{{ .Release.Name}}-domain</code> to get the sofy-domain.</p>
+
+    <p>Every deployed solution comes with a ConfigMap <code>{{ .Release.Name }}-domain</code> that has variables <code>HOST</code> and <code>HOST_PROTOCOL</code>, which are configured dynamically when a solution is installed.</p>
+
+    <p>The <code>HOST</code> variable will have a Sofy sub-domain and <code>HOST_PROTOCOL</code> will be <code>https</code> (since all Sofy solution have TLS enabled.)</p>
+
+    <p>This ConfigMap can be used in a container as follows:</p>
+
+    <pre><code class="language-yaml">  
+    containers:
+      - name: example
+        image: "busybox:latest"
+        env:
+          - name: MY_SUB_DOMAIN
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Release.Name }}-domain
+                key: HOST
+  
+</code></pre>
+
+    <p>This will return the “sub domain”. For example the SoFy KeyCloak discovery endpoint could then be retrieved with the below by inserting the <code>env.SOLUTION_DOMAIN</code> into the rest of the known (or constructed) URL.</p>
+
+    <pre><code class="language-yaml">discoveryEndpointUrl="https://sofy-kc.${env.MY_SUB_DOMAIN}/auth/realms/sofySolution/.well-known/openid-configuration"
+</code></pre>
+
+    <p>This is very helpful in scenarios when a solution is deployed in a private cluster (other than Sofy sandbox), where the Sofy’s Ambassador (load balancer) will not have a sub-domain set and instead use dynamic IP (if available) to create a subdomain of type <code>**external-ip**.nip.io</code>. Thus, the container can get the dynamic domain, and not depend on a solution admin to supply it.</p>
+
+    <blockquote>
+      <p><strong>Note:</strong> Due to the dynamic nature of assigning an external IP to a service in a Kubernetes cluster, which varies by cloud provider, the ConfigMap may not immediately have the environment variable available. In that case, a pod which has a container trying to retrieve the environment variable will not start up until the ConfigMap is properly configured.</p>
+    </blockquote>
+  </li>
+</ul>
+
+    </div>
+
+    <footer>
+        <img src=/assets/images/hcl-m@2x.png>
+    </footer>
+</body>
+</html>

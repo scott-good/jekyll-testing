@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoFy Integration / Solution Routing</title>
+    <link rel="stylesheet" href=/assets/css/main.css>
+</head>
+<body>
+    <div class="title-area">
+        <div class="inner-title-area">
+            <div class="logo-area">
+                <img src=/assets/images/hcl-sofy-logo.svg class="logo">
+            </div>
+            <h1 class="title">SoFy Integration / Solution Routing</h1>
+            <p class="sub-title">A description of the post.</p>
+        </div>
+    </div>
+    <div id="main-body">
+        <ul class="navigation">
+    
+    <li>
+        <a class='level_1' href="../../../index.html" alt="Getting Cloud Native-Ready with SoFy">Home</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/01-sofy-catalog-item-types.html" alt="SoFy Catalog Item Types">Item Types</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/02-sofy-metadata.html" alt="SoFy Metadata">Metadata</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/13/helm-chart-reqts.html" alt="Helm Chart Requirements">Helm Charts</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/03.0-sofy-integration.html" alt="SoFy Integration">Integration</a>
+        
+            <span class='downArrow'>&#8964</span>
+            <ul>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.1-sofy-integration-flexnet.html" alt="FlexNet Licensing Integration">FlexNet Licensing</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.2-sofy-integration-soltn-routing.html" alt="SoFy Solution Routing">Solution Routing</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.3-sofy-integration-global-configs.html" alt="Global Configuration Settings">Global Configs</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.4-sofy-integration-solutn-console-ui.html" alt="SoFy Solution Console UI">Console UI</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.5-sofy-integration-pods-requirements.html" alt="Pods Requirements">Pods Reqts</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.6-sofy-integration-getting-sofy-domain-name.html" alt="Getting the SoFy Domain Name">SoFy Domain</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.7-sofy-integration-k8s-naming.html" alt="Kubernetes Naming Conventions">K8s Naming</a>
+                </li>
+                
+            </ul>
+        
+    </li>
+    
+</ul>
+<h2 id="2-sofy-solution-routing">2. SoFy Solution Routing</h2>
+
+<p>SoFy uses <a href="https://www.getambassador.io/">Ambassador</a> to provide common routing for all products and services included in a SoFy solution.</p>
+
+<p>When Sofy Solutions are deployed in customers own Kubernetes cluster, all the services are exposed via Ambassador. Application users access the service endpoints via Ambassador IP address.</p>
+
+<p>When the solutions are deployed in a Sofy Sandbox, there is an extra layer of LoadBalancer deployed on top of Ambassador. Along with the Ambassador deployed for each solution, there is an Nginx LoadBalancer in the Sandbox to expose the Ambassador endpoints.</p>
+
+<p><img src="./docs/images/Routing.png?raw=true" alt="Routing" title="Routing in Sofy Solution" /></p>
+
+<h3 id="default-routing">Default Routing</h3>
+
+<p>By default SoFy solutions automatically create public routes for each Kubernetes service in the Helm chart.</p>
+
+<p><em>Example:</em></p>
+
+<p>The <a href="https://github01.hclpnp.com/kubernetes/sofy-catalog-content/tree/master/GA/snoop">SoFy Debug Service Helm chart</a> does not define any routing (i.e., ingress from the Helm template is disabled). However, when that service is included in a SoFy Solution, it is automatically assigned a public route at: <code>http://snoop.{solution-ip}.nip.io</code>.</p>
+
+<p><em>Note</em>:</p>
+
+<p>If your service is internal to the cluster only, you can disable the default public route for that service in your chart, or in any child charts. See <a href="#4-solution-console-ui-integration">sofy-config.yaml</a>.</p>
+
+<h3 id="custom-routing-and-exposing-tcp-ports">Custom Routing and Exposing TCP Ports</h3>
+
+<p>When products have more advanced routing requirements, those can be configured through <a href="https://www.getambassador.io/docs/latest/topics/using/intro-mappings/">Ambassador Mapping CRD</a>.</p>
+
+<p>The value required by the <code>ambassador_id</code> property of the Mapping CRD of any SoFy solution is available from a global variable in values.yaml: <code>{{ .Values.global.ambassadorID }}</code>.</p>
+
+<p><em>Example:</em></p>
+
+<p>The Workload Automation server chart defines a <a href="https://github01.hclpnp.com/kubernetes/sofy-catalog-content/blob/master/BETA/hcl-wa-server-prod/templates/ambassador-mapping.yaml">custom routing with ambassador mapping CRD</a>.</p>
+
+<p>TCP ports can be exposed in a similar way through either a <a href="https://www.getambassador.io/docs/latest/topics/using/tcpmappings/">TCPMapping</a> or <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/">annotaion</a>.</p>
+
+<p>Exposing TCP ports will also require the ports be reserved on SoFy’s ambassador, please contact a SoFy dev so the desired ports can be reserved. Due to a <a href="https://github.com/datawire/ambassador/issues/1965">known limitation with Ambassador</a>, TCP ports cannot be exposed through the SoFy Sandbox environemnt. This limitation should be documented in your service markdown under the Access URL’s section. See the <a href="https://github01.hclpnp.com/Kunj-Patel/sofy-catalog-content/blob/master/GA/onedb-sql/sofy/docs/documentation.md">OneDB SQL</a> markdown for a good example on documenting exposed TCP ports.</p>
+
+<p><em>Examples:</em></p>
+
+<p>The HCL Launch chart exposes a TCP endpoint through a <a href="https://github01.hclpnp.com/Kunj-Patel/sofy-catalog-content/blob/master/GA/hcl-launch-server/templates/ambassador-mapping.yaml">TCPMapping yaml file</a>.</p>
+
+<p>The OneDB SQL chart exposes a TCP endpoint through annotations. See <a href="https://github01.hclpnp.com/Kunj-Patel/sofy-catalog-content/blob/master/GA/onedb-sql/values.yaml">Values.yaml</a> &amp; <a href="https://github01.hclpnp.com/Kunj-Patel/sofy-catalog-content/blob/master/GA/onedb-sql/templates/service-sqli.yaml">service.yaml</a></p>
+
+<p>Note: To easily toggle exposing TCP endpoints, the annotation or TCPMapping should be wraped with a IF statment using the disableAccessControl variable. See the <a href="https://github01.hclpnp.com/Kunj-Patel/sofy-catalog-content/blob/master/GA/onedb-sql/values.yaml">OneDB SQL</a> annotation for an example.</p>
+
+<p><em>Custom routing in SoFy Charts</em></p>
+
+<p>Imagine a product wants to have a custom domain defined for a Kubernetes service. To define such an end point in a SoFy Helm chart, create a dummy service with the custom domain as its service name in the Helm chart’s <code>templates</code> folder.</p>
+
+<p>Dummy Kubernetes service example:</p>
+
+<pre><code class="language-YAML">
+{{- if .Values.global.sofySolutionContext }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-custom-domain
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+---
+{{- end}}
+
+</code></pre>
+
+<p>Then create an Ambassador mapping for the same to point to the actual Kubernetes service.</p>
+
+<p>Ambassador Mapping Example:</p>
+
+<pre><code class="language-YAML">
+apiVersion: getambassador.io/v1
+kind: Mapping
+metadata:
+  name: crd-custom-domain
+spec:  
+  prefix: /.*
+  host: custom-domain.{{ .Values.global.domain }}
+  ambassador_id: {{ .Values.global.ambassadorID }}
+  case_sensitive: false
+  host_regex: true
+  prefix_regex: true
+  rewrite: ""
+  timeout_ms: 120000
+  connect_timeout_ms: 1200000
+  idle_timeout_ms: 1200000
+  bypass_auth: {{ .Values.disableAccessControl }}
+  service: http://actualservice:8081
+  
+</code></pre>
+
+<p>Note: The <code>host</code> value of the Ambassador mapping, and the dummy Kubernetes service name (the part that comes after <code>.Release.Name</code>) must be same. In this example it is <code>custom-domain</code>.</p>
+
+<p>Once the Ambassador mapping has been defined, update <code>sofy-config.yaml</code> to include the dummy Kubernetes service so that its endpoints will be shown in the SoFy Solution Console UI.</p>
+
+<p>Example : sofy-config.yaml</p>
+<pre><code class="language-JSON">
+  "{{ .Release.Name }}-custom-domain":{
+          "disablePublicRoute" : "true",
+          "disableAccessControl" : "true",
+          "contextRoots": {
+            "ui": {
+              "Custom Page ": "/newPage.html"
+            },
+            "health": {
+              "checktype": "http",
+              "endpoint": "/"
+            }
+          }
+        }
+
+</code></pre>
+<p>Note: Do not add <code>additionalLogs</code> to dummy service name as there will be no pods/containers attached to it.</p>
+
+<p>To get additional logs, define the logs for the actual Kubernetes service which points to the pods and containers.</p>
+
+<p>Example : sofy-config.yaml</p>
+<pre><code class="language-JSON"> "actualservice": {
+          "disablePublicRoute" : "true",
+          "disableAccessControl" : "true",
+          "additionalLogFiles" : {
+            "actualservice": {
+              "Products logs": "/logsFolder/"
+            }
+          }
+        }
+</code></pre>
+
+    </div>
+
+    <footer>
+        <img src=/assets/images/hcl-m@2x.png>
+    </footer>
+</body>
+</html>

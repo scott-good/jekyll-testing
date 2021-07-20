@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoFy Integration / Global Configuration Settings</title>
+    <link rel="stylesheet" href=/assets/css/main.css>
+</head>
+<body>
+    <div class="title-area">
+        <div class="inner-title-area">
+            <div class="logo-area">
+                <img src=/assets/images/hcl-sofy-logo.svg class="logo">
+            </div>
+            <h1 class="title">SoFy Integration / Global Configuration Settings</h1>
+            <p class="sub-title">A description of the post.</p>
+        </div>
+    </div>
+    <div id="main-body">
+        <ul class="navigation">
+    
+    <li>
+        <a class='level_1' href="../../../index.html" alt="Getting Cloud Native-Ready with SoFy">Home</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/01-sofy-catalog-item-types.html" alt="SoFy Catalog Item Types">Item Types</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/02-sofy-metadata.html" alt="SoFy Metadata">Metadata</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/13/helm-chart-reqts.html" alt="Helm Chart Requirements">Helm Charts</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/03.0-sofy-integration.html" alt="SoFy Integration">Integration</a>
+        
+            <span class='downArrow'>&#8964</span>
+            <ul>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.1-sofy-integration-flexnet.html" alt="FlexNet Licensing Integration">FlexNet Licensing</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.2-sofy-integration-soltn-routing.html" alt="SoFy Solution Routing">Solution Routing</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.3-sofy-integration-global-configs.html" alt="Global Configuration Settings">Global Configs</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.4-sofy-integration-solutn-console-ui.html" alt="SoFy Solution Console UI">Console UI</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.5-sofy-integration-pods-requirements.html" alt="Pods Requirements">Pods Reqts</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.6-sofy-integration-getting-sofy-domain-name.html" alt="Getting the SoFy Domain Name">SoFy Domain</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.7-sofy-integration-k8s-naming.html" alt="Kubernetes Naming Conventions">K8s Naming</a>
+                </li>
+                
+            </ul>
+        
+    </li>
+    
+</ul>
+<h2 id="global-configurations">Global Configurations</h2>
+
+<h3 id="chartyaml-file">Chart.yaml file</h3>
+
+<p>Chart.yaml provides metadata about the helm chart. To onboard SoFy catalog, it must include the following:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Properties</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>apiVersion</td>
+      <td>[required] v2 for Helm 3 charts</td>
+    </tr>
+    <tr>
+      <td>appVersion</td>
+      <td>[required] Product version included in this chart. If the chart is targeted for Beta in SoFy, append with “-Beta”. For example “11.1.0.2”, “14.10.FC3-Beta”, or “9.2.0.19-pvu” etc. Semver is not required.</td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>[required] Name of the chart, must be unique in SoFy catalog, thus in the <a href="https://github01.hclpnp.com/kubernetes/sofy-catalog-content">sofy-catalog-content</a> repository.</td>
+    </tr>
+    <tr>
+      <td>version</td>
+      <td>[required] Version of the chart, must be updated each time any chart change is pushed to the <a href="https://github01.hclpnp.com/kubernetes/sofy-catalog-content">sofy-catalog-content</a> repository to guarantee the new version is onboarded. Must be <a href="https://semver.org/">semver</a> with <em>Major.Minor.Patch</em> only.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>Example:</em></p>
+
+<pre><code class="language-yaml">apiVersion: v2
+name: informix
+version: 0.11.0
+appVersion: 14.10.FC3-Beta
+description: HCL Informix Helm chart for Kubernetes
+</code></pre>
+
+<h3 id="valuesyaml-file">values.yaml file</h3>
+
+<p>Global and local variables enable common configurations to be overwritten at the solution level as well as at each individual product level. For example, users can set their FlexNet license once for the entire solution, rather than having to set it individually for each product or service included in the solution. Of course, different FlexNet licenses can be set for one or more products if needed.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Configuration</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>global.hclImageRegistry</td>
+      <td>[required] Global registry variable for <strong>GA images</strong>. Use <code>hclcr.io/sofy</code>.<br /><br /><strong>Note</strong>: All SoFy solutions require a value be provided for at least one of <code>global.hclImageRegistry</code> or <code>global.hclPreviewImageRegistry</code>. Both are not needed for most SoFy Solutions, although some Solutions may require them.</td>
+    </tr>
+    <tr>
+      <td>global.hclImagePullSecret</td>
+      <td>[required] Global variable with “” empty value by default. A secret with user’s own registry credentials is required at helm chart install time for non-sandbox installs.<br /><br />For example: <br /><code>helm install my-release my-chart.tgz --set global.hclImagePullSecret=[my-registry-pull-secret]</code></td>
+    </tr>
+    <tr>
+      <td>global.hclPreviewImageRegistry</td>
+      <td>[required] Global registry variable for <strong>Preview images</strong>. Use hclcr.io/sofy-hcl-users.<br /><br /><strong>Note</strong>: All SoFy solutions require a value be provided for at least one of <code>global.hclImageRegistry</code> or <code>global.hclPreviewImageRegistry</code>. Both are not needed for most SoFy Solutions, although some Solutions may require them.</td>
+    </tr>
+    <tr>
+      <td>hclFlexnetID</td>
+      <td>[required] Empty by default (‘’). User’s own FlexNet ID can be passed in at install time. The value must be properly set to the containers that need it for license check. <br /><br />For example: <br /><code>helm install my-release my-chart.tgz --set hclFlexnetURL=[my-flexnet-server-url] --set hclFlexnetID=[my-flexnet-id] --set informix.hclFlexnetURL=[my-informix-flexnet-server-url] --set informix.hclFlexnetID=[my-informix-flexnet-id]</code></td>
+    </tr>
+    <tr>
+      <td>hclFlexnetURL</td>
+      <td>[required] Empty by default (‘’). User’s own FlexNet Server URL can be passed in at install time. The value must be properly set to the containers that need it for license check. <br /><br />For example: <br /><code>helm install my-release my-chart.tgz --set hclFlexnetURL=[my-flexnet-server-url] --set hclFlexnetID=[my-flexnet-id]</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Since the Docker image registry is set by <code>global.hclImageRegistry</code>, it’s necessary to have a separate variable for your image path within that registry. When image paths are consistent across different registries, having separate variables allows easy switching between test and production registries, by simply overwriting the <code>global.hclImageRegistry</code> value at install time.</p>
+
+<p><em>values.yaml Example:</em></p>
+
+<pre><code class="language-yaml"># global variables for docker registry access
+global:
+  hclImageRegistry: hclcr.io/sofy  # Default production registry. Push your images to "gcr.io/blackjack-209019".
+  hclImagePullSecret: ''
+# local variables for FlexNet cliense  
+hclFlexnetURL: ''
+hclFlexnetID: ''
+# docker image path and tag inside the image registry
+image:
+  repository: services/test-data-synth/test-data-synth
+  tag: 1.5.0
+  pullPolicy: IfNotPresent
+</code></pre>
+
+<p>With separate image registry, image path, and image tag variables in <code>values.yaml</code>, as shown above, all pods’ templates must specify the full image pull path in <code>pod.spec.containers.image</code> by concatenating them.</p>
+
+<p>Use the template <code>{{ tpl .Values.hclFlexnetURL . }}</code> and <code>{{ tpl .Values.hclFlexnetID . }}</code> to pass the values as needed. The example below illustrates passing these values to a pod by using environment variables:</p>
+
+<p><em>deployment.yaml Example:</em></p>
+
+<pre><code class="language-yaml">
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      {{- if .Values.global.hclImagePullSecret }}
+      imagePullSecrets:
+      - name: {{ .Values.global.hclImagePullSecret }}
+      {{- end }}
+      containers:
+        - image: "{{ .Values.global.hclImageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Chart.Name }} ## your own container name
+          env:
+            - name: HCL_LICENSE_SERVER_URL
+              value: {{ include "license.id" . | quote }}
+            - name: HCL_LICENSE_SERVER_ID
+              value: {{ include "license.id" . | quote }}
+
+</code></pre>
+
+<p><strong>Note</strong>: See <a href="#1-flexnet-license">Flexnet license requirement</a> for For more information and examples on how to use named templates.</p>
+
+<h5 id="useful-global-values">Useful global values</h5>
+
+<p>There can be times when global contexts are needed. Here is a collection of them and how they can be used:</p>
+
+<ul>
+  <li><code>global.sofySandboxContext</code> from values.yaml. This variable is not created in the generated solution chart. However when the solution is installed in SoFy Sandbox, it is created and will be set to <code>true</code>. This can be useful to know if the current install is in the Sandbox or not.  For example, it can be checked with:</li>
+</ul>
+
+<pre><code class="language-yaml">
+{{- if .Values.global.sofySandboxContext }}
+
+</code></pre>
+
+    </div>
+
+    <footer>
+        <img src=/assets/images/hcl-m@2x.png>
+    </footer>
+</body>
+</html>

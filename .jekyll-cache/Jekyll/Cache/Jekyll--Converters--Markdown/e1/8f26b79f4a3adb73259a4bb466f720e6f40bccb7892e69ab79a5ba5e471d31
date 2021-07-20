@@ -1,0 +1,73 @@
+I"4<h4 id="5-pods-requirements">5. Pods Requirements</h4>
+
+<h5 id="resource-requests-and-limits">Resource Requests and Limits</h5>
+
+<p>Kubernetes manages the allocation of resources to individual containers as described in <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">Resource requests and limits</a>.</p>
+
+<p>Helm charts in the SoFy catalog should specify at least the minimal resource requirements and, ideally, also a resource limit for each pod. Such configuration details can be included as a part of <code>values.yaml</code> so there’s a recommended default value, but advanced users can overwrite it at install time, if needed.</p>
+
+<p><em>Example</em></p>
+
+<p>In values.yaml file:</p>
+
+<pre><code class="language-yaml">
+resources:
+  requests:
+    cpu: 100m
+    memory: 200Mi
+  limits:
+      cpu: 1
+      memory: 1G
+
+</code></pre>
+
+<p>Then, in the <code>deployment.yaml</code> or <code>statefulset.yaml</code> file for <code>pod.spec.containers.resources</code>, can populate its value from <code>values.yaml</code>:</p>
+
+<pre><code class="language-yaml">
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+</code></pre>
+
+<h5 id="health-checks">Health Checks</h5>
+
+<p>Kubernetes uses <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">Readiness, Liveness probes</a> to know whether pods are (a) ready for requests (Readiness probes), and (b) still alive or need a restart (Liveness probes). It’s important to provide these two health check probes for all pods. They can be implemented via command, HTTP GET request, or TCP socket. See <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/">Kubernetes documentation</a> for details.</p>
+
+<p><strong>Note</strong>: Readiness probes, especially when used for applications, can take some time to start up.</p>
+
+<h5 id="labels-and-selectors">Labels and Selectors</h5>
+
+<p><a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/">Kubernetes labels and selectors</a> are key-value pairs used to identify and define attributes of Kubernetes resources. SoFy’s Solution Console uses these key-value pairs to identify and display all Kubernetes resources from your application.</p>
+
+<p>Minimally, your pods and services <strong>must</strong> contain both the <code>app.kubernetes.io/name</code> and <code>app.kubernetes.io/instance</code> labels.</p>
+
+<p><code>app.kubernetes.io/name</code> is used to display the application’s pods in the SoFy Solution Console. Label <code>app.kubernetes.io/instance</code> is used to select all Kubernetes resources from the SoFy solution install. You are responsible to make sure Kubernetes resources from any third-party dependency charts also contain and use these labels properly.</p>
+
+<pre><code>
+app.kubernetes.io/name: {{ include "my-helm-chart.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+
+</code></pre>
+
+<p><strong>Note:</strong> The following labels have been superseded by <code>app.kubernetes.io/name</code> and <code>app.kubernetes.io/instance</code>. Do not use them.</p>
+
+<pre><code class="language-yaml">
+name:  {{ include "my-helm-chart.name" . }}
+release: {{ .Release.Name }}
+
+</code></pre>
+
+<p>If you used <code>helm create my-chart-name</code> as the template or started your chart, you should be all set.</p>
+:ET

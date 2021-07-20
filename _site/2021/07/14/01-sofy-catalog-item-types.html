@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
+    <title>SoFy Catalog Item Types</title>
     <link rel="stylesheet" href=/assets/css/main.css>
 </head>
 <body>
@@ -13,8 +13,8 @@
             <div class="logo-area">
                 <img src=/assets/images/hcl-sofy-logo.svg class="logo">
             </div>
-            <h1 class="title">Blog</h1>
-            <p class="sub-title"></p>
+            <h1 class="title">SoFy Catalog Item Types</h1>
+            <p class="sub-title">Understanding the various types of content available in SoFy.</p>
         </div>
     </div>
     <div id="main-body">
@@ -79,7 +79,36 @@
     </li>
     
 </ul>
-<p>This is some generic content.</p>
+<h2 id="sofy-catalog-item-types">SoFy Catalog Item Types</h2>
+
+<p>The SoFy catalog is comprised of five different types of content.</p>
+
+<ul>
+  <li>Products</li>
+  <li>Modules</li>
+  <li>Demo Packs</li>
+  <li>Demo Docs</li>
+  <li>Proxies</li>
+</ul>
+
+<p>Of these, Products, Modules, and Demo Packs can be deployed in either the standard full-featured mode, or in “Hybrid Mode,” which restricts some capabilities for non-HCL users.</p>
+
+<h4 id="products">Products</h4>
+<p>Products are actual HCL Software offerings, such as BigFix, Commerce, DX, and Domino.</p>
+
+<h4 id="modules">Modules</h4>
+<p>Modules are also called services, microservices, or APIs. These are helper components which generally work in conjunction with one or more products.</p>
+
+<h4 id="demo-packs">Demo Packs</h4>
+<p>Demo Packs are used to create demonstration environments where one or more products are integrated and configured for specific purposes. For instance, a Demo Pack for HCL Commerce might include additional database content, graphics, and integration with OneDB.</p>
+
+<h4 id="demo-docs-and-proxies">Demo Docs and Proxies</h4>
+<p>Some products, such as HCL Accelerate, include built-in demonstrations (and, therefore, don’t require a separate Demo Pack). Demo Docs are a way to provide detailed instructions on how those demos should be configured and presented.</p>
+
+<p>Similarly, a few HCL products aren’t yet ready for inclusion in SoFy but have external web or demo sites. Proxy entries provide a way for those products to be included in the SoFy Catalog along with some level of documentation and links to their external sites.</p>
+
+<h4 id="hybrid-mode">Hybrid Mode</h4>
+<p>Hybrid entries are SoFy Products, Modules, or Demo Packs that can be deployed to a SoFy sandbox by anyone, but downloading of the Helm charts for deployment outside a SoFy sandbox is restricted to HCL internal users only.</p>
 
     </div>
 

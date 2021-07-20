@@ -1,15 +1,21 @@
 ---
 layout: default
 ---
-
-{{ content }}
-<ul class="myposts">
-    {% for post in site.posts %}
+<ul class="navigation">
+    {% for page in site.data.menu.pages %}
     <li>
-        <a class='post__title' href="{{ post.url }}">{{ post.title }}</a>
-        <span class="post__desc">
-            {{ post.description }}
-        </span>
+        <a class='level_1' href="{{ page.url }}" alt="{{ page.full_title }}">{{ page.menu_title }}</a>
+        {% if page.children %}
+            <span class='downArrow'>&#8964</span>
+            <ul>
+                {% for child in page.children %}
+                <li>
+                    <a class='level_2' href="{{ child.url }}" alt="{{ child.full_title }}">{{ child.menu_title }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </li>
     {% endfor %}
 </ul>
+{{ content }}

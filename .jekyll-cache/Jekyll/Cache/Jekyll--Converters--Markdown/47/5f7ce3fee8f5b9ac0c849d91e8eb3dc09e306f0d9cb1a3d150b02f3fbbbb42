@@ -1,0 +1,23 @@
+I"'<h2 id="sofy-integration">SoFy Integration</h2>
+
+<p>When users browse the SoFy catalog for HCL software, they can easily build a custom <em>SoFy Solution</em> consisting of one or more software products from the catalog.</p>
+
+<p>In order for any HCL catalog entries to be installable and accessible from a <em>SoFy Solution</em>, the Helm chart needs to enable:</p>
+
+<ul>
+  <li>SoFy Integration
+    <ul>
+      <li><a href="/2021/07/14/03.1-sofy-integration-flexnet.html">1. FlexNet License</a></li>
+      <li><a href="#2-sofy-solution-routing">2. SoFy Solution Routing</a></li>
+      <li><a href="#3-global-configs">3. Global Configs</a></li>
+      <li><a href="#4-solution-console-ui-integration">4. Solution Console UI Integration</a></li>
+      <li><a href="#5-pods-requirements">5. Pods Requirements</a></li>
+      <li><a href="#6-getting-sofy-domain-in-a-container">6. Getting Sofy Domain in a Container</a></li>
+      <li><a href="#7-kubernetes-resource-naming-best-practice">7. Kubernetes Resource Naming Best Practice</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Teams that wish to use the same Helm chart for release channels outside of SoFy can hide the SoFy-required elements conditionally based on <code>.Values.global.sofySolutionContext</code> which is only set to <code>true</code> in SoFy solution charts.</p>
+
+:ET

@@ -9,18 +9,20 @@
 </head>
 <body>
     <div class="title-area">
-        <div class="logo-area">
-            <img src={{ "assets/images/hcl-sofy-logo.svg" | relative_url }} class="logo">
+        <div class="inner-title-area">
+            <div class="logo-area">
+                <img src={{ "assets/images/hcl-sofy-logo.svg" | relative_url }} class="logo">
+            </div>
+            <h1 class="title">{{ page.title }}</h1>
+            <p class="sub-title">{{ page.description }}</p>
         </div>
-        <h1 class="title">{{ page.title }}</h1>
-        <p class="sub-title">{{ page.description }}</p>
     </div>
     <div id="main-body">
         {{ content }}
     </div>
 
     <footer>
-        <p>This is whatever is going to end up as the footer.</p>
+        <img src={{ "assets/images/hcl-m@2x.png" | relative_url }}>
     </footer>
 </body>
 </html>

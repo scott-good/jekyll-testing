@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoFy Integration / FlexNet License</title>
+    <link rel="stylesheet" href=/assets/css/main.css>
+</head>
+<body>
+    <div class="title-area">
+        <div class="inner-title-area">
+            <div class="logo-area">
+                <img src=/assets/images/hcl-sofy-logo.svg class="logo">
+            </div>
+            <h1 class="title">SoFy Integration / FlexNet License</h1>
+            <p class="sub-title">A description of the post, or an introduction or that type of content would go here, and probably look okay as long as it's not too short. And this is definitely not too short.</p>
+        </div>
+    </div>
+    <div id="main-body">
+        <ul class="navigation">
+    
+    <li>
+        <a class='level_1' href="../../../index.html" alt="Getting Cloud Native-Ready with SoFy">Home</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/01-sofy-catalog-item-types.html" alt="SoFy Catalog Item Types">Item Types</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/02-sofy-metadata.html" alt="SoFy Metadata">Metadata</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/13/helm-chart-reqts.html" alt="Helm Chart Requirements">Helm Charts</a>
+        
+    </li>
+    
+    <li>
+        <a class='level_1' href="/2021/07/14/03.0-sofy-integration.html" alt="SoFy Integration">Integration</a>
+        
+            <span class='downArrow'>&#8964</span>
+            <ul>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.1-sofy-integration-flexnet.html" alt="FlexNet Licensing Integration">FlexNet Licensing</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.2-sofy-integration-soltn-routing.html" alt="SoFy Solution Routing">Solution Routing</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.3-sofy-integration-global-configs.html" alt="Global Configuration Settings">Global Configs</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.4-sofy-integration-solutn-console-ui.html" alt="SoFy Solution Console UI">Console UI</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.5-sofy-integration-pods-requirements.html" alt="Pods Requirements">Pods Reqts</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.6-sofy-integration-getting-sofy-domain-name.html" alt="Getting the SoFy Domain Name">SoFy Domain</a>
+                </li>
+                
+                <li>
+                    <a class='level_2' href="/2021/07/14/03.7-sofy-integration-k8s-naming.html" alt="Kubernetes Naming Conventions">K8s Naming</a>
+                </li>
+                
+            </ul>
+        
+    </li>
+    
+</ul>
+<h2 id="flexnet-license-integration">FlexNet License Integration</h2>
+
+<h3 id="requirements">Requirements</h3>
+
+<ol>
+  <li>
+    <p>FlexNet runtime license check is required by your product container(s) for GA. This is used as an anti-piracy mechanism.</p>
+  </li>
+  <li>
+    <p>Customer’s license information can be set during the SoFy Solution Helm chart install using either of the following approaches:</p>
+  </li>
+</ol>
+
+<p>When customer has a single license for all products included in the solution:</p>
+<pre><code class="language-bash">helm install my-release my-solution-chart.tgz \
+--set hclFlexnetURL=[my-flexnet-server-url] \
+--set hclFlexnetID=[my-flexnet-id]
+</code></pre>
+
+<p>When the customer has multiple licenses included in the solution, individual licenses can be designated toward specific products. This example sets a second license for the <code>onedb</code> child chart in the solution:</p>
+<pre><code class="language-bash">helm install my-release my-solution-chart.tgz \
+--set hclFlexnetURL=[my-flexnet-server-url1],hclFlexnetID=[my-flexnet-id1] \
+--set onedb.hclFlexnetURL=[my-flexnet-server-url2],onedb.hclFlexnetID=[my-flexnet-id2]
+</code></pre>
+
+<h3 id="how-to-enable">How to Enable</h3>
+
+<p>To enable this in your product container(s), they should be able to accept FlexNet license configurations at startup time, usually via environment variables.</p>
+
+<p>Enabling this in your Helm chart requires adjustments in three places:</p>
+
+<p>1) Expose the following common variables in <code>values.yaml</code> as empty strings.</p>
+
+<p><em>values.yaml Example:</em></p>
+
+<pre><code class="language-yaml"># variables for FlexNet license
+hclFlexnetURL: ''
+hclFlexnetID: ''
+</code></pre>
+
+<p>2) To enable a multiple-license scenario, create named template(s) such as the following in <code>./templates/_helpers.tpl</code>, or your own .tpl file, using values from either local or global variables. Note that if variable names conflict, local variables take precedence.</p>
+
+<p><em>_helpers.tpl:</em></p>
+
+<pre><code class="language-yaml">
+{{/*
+FlexNet License URL
+*/}}
+{{- define "license.url" -}}
+
+{{- if .Values.hclFlexnetURL -}}
+{{ tpl .Values.hclFlexnetURL . }}
+{{- else if .Values.global.hclFlexnetURL -}}
+{{ tpl .Values.global.hclFlexnetURL . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+FlexNet License ID
+*/}}
+{{- define "license.id" -}}
+
+{{- if .Values.hclFlexnetID -}}
+{{ tpl .Values.hclFlexnetID . }}
+{{- else if .Values.global.hclFlexnetID -}}
+{{ tpl .Values.global.hclFlexnetID . }}
+{{- end -}}
+{{- end -}}
+
+</code></pre>
+
+<p>3) Use the named templates to pass the FlexNet license to your containers.</p>
+
+<p><em>deployment.yaml example:</em></p>
+
+<pre><code class="language-yaml">
+      containers:
+        - image: "{{ .Values.global.hclImageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: "HCL_LICENSE_SERVER_URL"
+              value: "{{ include "license.url" . }}"
+            - name: "HCL_LICENSE_SERVER_ID"
+              value: "{{ include "license.id" . }}"
+
+</code></pre>
+
+    </div>
+
+    <footer>
+        <img src=/assets/images/hcl-m@2x.png>
+    </footer>
+</body>
+</html>

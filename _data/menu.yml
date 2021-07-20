@@ -1,0 +1,38 @@
+pages:
+  - menu_title: Home
+    full_title: Getting Cloud Native-Ready with SoFy
+    url: ../../../index.html
+  - menu_title: Item Types
+    full_title: SoFy Catalog Item Types
+    url: /2021/07/14/01-sofy-catalog-item-types.html
+  - menu_title: Metadata
+    full_title: SoFy Metadata
+    url: /2021/07/14/02-sofy-metadata.html
+  - menu_title: Helm Charts
+    full_title: Helm Chart Requirements
+    url: /2021/07/13/helm-chart-reqts.html
+  - menu_title: Integration
+    full_title: SoFy Integration
+    url: /2021/07/14/03.0-sofy-integration.html
+    children: 
+    - menu_title: FlexNet Licensing
+      full_title: FlexNet Licensing Integration
+      url: /2021/07/14/03.1-sofy-integration-flexnet.html
+    - menu_title: Solution Routing
+      full_title: SoFy Solution Routing
+      url: /2021/07/14/03.2-sofy-integration-soltn-routing.html
+    - menu_title: Global Configs
+      full_title: Global Configuration Settings
+      url: /2021/07/14/03.3-sofy-integration-global-configs.html
+    - menu_title: Console UI
+      full_title: SoFy Solution Console UI
+      url: /2021/07/14/03.4-sofy-integration-solutn-console-ui.html
+    - menu_title: Pods Reqts
+      full_title: Pods Requirements
+      url: /2021/07/14/03.5-sofy-integration-pods-requirements.html
+    - menu_title: SoFy Domain
+      full_title: Getting the SoFy Domain Name
+      url: /2021/07/14/03.6-sofy-integration-getting-sofy-domain-name.html
+    - menu_title: K8s Naming
+      full_title: Kubernetes Naming Conventions
+      url: /2021/07/14/03.7-sofy-integration-k8s-naming.html

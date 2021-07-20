@@ -1,0 +1,87 @@
+I"ã<h2 id="1-flexnet-license">1. FlexNet License</h2>
+
+<h3 id="requirements">Requirements</h3>
+
+<ol>
+  <li>
+    <p>FlexNet runtime license check is required by your product container(s) for GA. This is used as an anti-piracy mechanism.</p>
+  </li>
+  <li>
+    <p>Customerâ€™s license information can be set during the SoFy Solution Helm chart install using either of the following approaches:</p>
+  </li>
+</ol>
+
+<p>When customer has a single license for all products included in the solution:</p>
+<pre><code class="language-bash">helm install my-release my-solution-chart.tgz \
+--set hclFlexnetURL=[my-flexnet-server-url] \
+--set hclFlexnetID=[my-flexnet-id]
+</code></pre>
+
+<p>When the customer has multiple licenses included in the solution, individual licenses can be designated toward specific products. This example sets a second license for the <code>onedb</code> child chart in the solution:</p>
+<pre><code class="language-bash">helm install my-release my-solution-chart.tgz \
+--set hclFlexnetURL=[my-flexnet-server-url1],hclFlexnetID=[my-flexnet-id1] \
+--set onedb.hclFlexnetURL=[my-flexnet-server-url2],onedb.hclFlexnetID=[my-flexnet-id2]
+</code></pre>
+
+<h3 id="how-to-enable">How to Enable</h3>
+
+<p>To enable this in your product container(s), they should be able to accept FlexNet license configurations at startup time, usually via environment variables.</p>
+
+<p>Enabling this in your Helm chart requires adjustments in three places:</p>
+
+<p>1) Expose the following common variables in <code>values.yaml</code> as empty strings.</p>
+
+<p><em>values.yaml Example:</em></p>
+
+<pre><code class="language-yaml"># variables for FlexNet license
+hclFlexnetURL: ''
+hclFlexnetID: ''
+</code></pre>
+
+<p>2) To enable a multiple-license scenario, create named template(s) such as the following in <code>./templates/_helpers.tpl</code>, or your own .tpl file, using values from either local or global variables. Note that if variable names conflict, local variables take precedence.</p>
+
+<p><em>_helpers.tpl:</em></p>
+
+<pre><code class="language-yaml">
+{{/*
+FlexNet License URL
+*/}}
+{{- define "license.url" -}}
+
+{{- if .Values.hclFlexnetURL -}}
+{{ tpl .Values.hclFlexnetURL . }}
+{{- else if .Values.global.hclFlexnetURL -}}
+{{ tpl .Values.global.hclFlexnetURL . }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+FlexNet License ID
+*/}}
+{{- define "license.id" -}}
+
+{{- if .Values.hclFlexnetID -}}
+{{ tpl .Values.hclFlexnetID . }}
+{{- else if .Values.global.hclFlexnetID -}}
+{{ tpl .Values.global.hclFlexnetID . }}
+{{- end -}}
+{{- end -}}
+
+</code></pre>
+
+<p>3) Use the named templates to pass the FlexNet license to your containers.</p>
+
+<p><em>deployment.yaml example:</em></p>
+
+<pre><code class="language-yaml">
+      containers:
+        - image: "{{ .Values.global.hclImageRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: "HCL_LICENSE_SERVER_URL"
+              value: "{{ include "license.url" . }}"
+            - name: "HCL_LICENSE_SERVER_ID"
+              value: "{{ include "license.id" . }}"
+
+</code></pre>
+
+:ET
